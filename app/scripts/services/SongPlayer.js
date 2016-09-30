@@ -19,7 +19,7 @@
                 stopSong();
             }  
             
-            currentBuzzObject= new buzz.sound(song.audioUrl, {
+            currentBuzzObject = new buzz.sound(song.audioUrl, {
                 formats: ['mp3'],
                 preload: true
             });
@@ -27,6 +27,12 @@
             currentBuzzObject.bind('timeupdate', function(){
                 $rootScope.$apply(function(){
                     SongPlayer.currentTime = currentBuzzObject.getTime();    
+                });
+            });
+            
+            currentBuzzObject.bind('volumechange', function(){
+                $rootScope.$apply(function(){
+                    SongPlayer.volume = currentBuzzObject.setVolume();    
                 });
             });
             
@@ -53,6 +59,12 @@
         * @type {Number}
         */
         SongPlayer.currentTime = null;
+        
+        /**
+        * @desc Current volume level of song
+        * @type {Number}
+        */
+        SongPlayer.volume = 20;
         
         SongPlayer.play = function(song){
             song = song || SongPlayer.currentSong;
@@ -107,8 +119,14 @@
         * @param {Number} time
         */
         SongPlayer.setCurrentTime = function(time){
-            if (currentBuzzObject){
+            if(currentBuzzObject){
                 currentBuzzObject.setTime(time);
+            }
+        };
+        
+        SongPlayer.setVolume = function(time){
+            if(currentBuzzObject){
+                currentBuzzObject.setVolume(time);
             }
         };
         
